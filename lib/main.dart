@@ -143,11 +143,10 @@ class _HomePageState extends State<HomePage> {
       );
       // -------- connection is OK --------
       final resultConnect = await client.connect();
+      await client.connectSFTP();
 
       // -------- uploading problem --------
       if (resultConnect.toString() == 'session_connected') {
-        print("Uploading..." + globals.picPath);
-
         final resultUpload = await client.sftpUpload(
           path: globals.picPath,
           toPath: "./photos",     // maybe wrong server path, some security problem or error in package:ssh/ssh.dart
@@ -155,11 +154,9 @@ class _HomePageState extends State<HomePage> {
             print(progress);
           },
         );
-        print("Upload: " + resultUpload.toString());
-
-        globals.sentServer = true;
+        if (resultUpload == 'upload_success')
+          globals.sentServer = true;
       }
-
       await client.disconnect();
 
     } catch (e) {
