@@ -4,8 +4,6 @@
 // password: 67IbyHP3PVF0
 // upload directory: photos
 
-
-
 // -------- import all packages --------
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -18,26 +16,15 @@ import 'package:ssh/ssh.dart';
 
 import 'globals.dart' as globals;
 
-
-
 // -------- application start point --------
 void main() => runApp(App());
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "SFTP Test App",
-        home: HomePage()
-    );
+    return MaterialApp(title: "SFTP Test App", home: HomePage());
   }
-
 }
-
-
-
-
 
 // -------- home page --------
 class HomePage extends StatefulWidget {
@@ -46,7 +33,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   // -------- render home page with AppBar and Buttons (second button only if picture exists) --------
   @override
   Widget build(BuildContext context) {
@@ -55,7 +41,6 @@ class _HomePageState extends State<HomePage> {
           title: Text("SFTP Test App"),
           backgroundColor: Colors.blue[900],
           actions: <Widget>[
-
             IconButton(
               icon: Icon(Icons.info),
               onPressed: () {
@@ -64,20 +49,20 @@ class _HomePageState extends State<HomePage> {
                     'About the app',
                     'SFTP Test App   Version 1.0\n\n'
                         'Developed by Crnko\n\n'
-                        'Take the picture from the camera and send to server.'
-                  );
+                        'Take the picture from the camera and send to server.');
               },
             ),
 
             // exit icon only on Android platform
-            Platform.isAndroid ?
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () {
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-              },
-            ): Container(),
-
+            Platform.isAndroid
+                ? IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop');
+                    },
+                  )
+                : Container(),
           ],
         ),
         body: Center(
@@ -89,8 +74,8 @@ class _HomePageState extends State<HomePage> {
 
             SizedBox(height: 20),
             ButtonTheme(
-            minWidth: 150.0,
-            height: 40.0,
+              minWidth: 150.0,
+              height: 40.0,
               child: FlatButton(
                 child:
                     Text("Take Picture", style: TextStyle(color: Colors.white)),
@@ -121,15 +106,14 @@ class _HomePageState extends State<HomePage> {
 
   // -------- call Second Class for camera support --------
   void _showCamera(BuildContext context) async {
-
     final cameras = await availableCameras();
     final camera = cameras.first;
-    final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakePicture(camera: camera)));
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => TakePicture(camera: camera)));
 
     setState(() {
       globals.picPath = result;
     });
-
   }
 
   // -------- send file to Server if exists --------
@@ -146,36 +130,39 @@ class _HomePageState extends State<HomePage> {
 
       // -------- uploading problem --------
       if (resultConnect.toString() == 'session_connected') {
-        print("Uploading..." + globals.picPath);
+        var result = await client.connectSFTP();
+        if (result == "sftp_connected") {
+          print("Uploading..." + globals.picPath);
 
-        final resultUpload = await client.sftpUpload(
-          path: globals.picPath,
-          toPath: "./photos",     // maybe wrong server path, some security problem or error in package:ssh/ssh.dart
-          callback: (progress) async {
-            print(progress);
-          },
-        );
-        print("Upload: " + resultUpload.toString());
+//sftp://william-blount.dreamhost.com//home/flutter_ftp/photos
 
-        globals.sentServer = true;
+          final resultUpload = await client.sftpUpload(
+            path: globals.picPath,
+            toPath:
+                "photos/", // maybe wrong server path, some security problem or error in package:ssh/ssh.dart
+            callback: (progress) async {
+              print(progress);
+            },
+          );
+          print("Upload: " + resultUpload.toString());
+
+          globals.sentServer = true;
+        }
       }
 
       await client.disconnect();
-
     } catch (e) {
       print(e);
       globals.sentServer = false;
     }
 
-    if (globals.sentServer == true){
+    if (globals.sentServer == true) {
       showInfo(context, 'Upload file', 'The file is uploaded to the server');
-    }
-    else {
+    } else {
       showInfo(context, 'Upload file', 'Error during upload');
     }
 
     setState(() {});
-
   }
 
   // -------- general function for show dialog box --------
@@ -183,7 +170,9 @@ class _HomePageState extends State<HomePage> {
     // set up the button
     Widget okButton = FlatButton(
       child: Text("Close"),
-      onPressed: () {Navigator.of(context).pop();},
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
     );
 
     // set up the AlertDialog
@@ -205,10 +194,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-
-
-
 // -------- second class for capture picture --------
 class TakePicture extends StatefulWidget {
   final CameraDescription camera;
@@ -226,7 +211,8 @@ class _TakePictureState extends State<TakePicture> {
   @override
   void initState() {
     super.initState();
-    _cameraController = CameraController(widget.camera, ResolutionPreset.medium);
+    _cameraController =
+        CameraController(widget.camera, ResolutionPreset.medium);
     _initializeCameraControllerFuture = _cameraController.initialize();
   }
 
@@ -234,10 +220,10 @@ class _TakePictureState extends State<TakePicture> {
     try {
       await _initializeCameraControllerFuture;
 
-      final path = join((await getTemporaryDirectory()).path, '${DateTime.now()}.png');
+      final path =
+          join((await getTemporaryDirectory()).path, '${DateTime.now()}.png');
       await _cameraController.takePicture(path);
-      Navigator.pop(context,path);
-
+      Navigator.pop(context, path);
     } catch (e) {
       print(e);
     }
