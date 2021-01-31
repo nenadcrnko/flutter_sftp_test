@@ -41,5 +41,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>NSCameraUsageDescription</key>
+    <string>Flutter Camera needs to access the camera for sites that you allow us camera.</string>
 </dict>
 </plist>
