@@ -2,15 +2,25 @@
 
 Flutter SFTP test.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Problematic part in project
 
-A few resources to get you started if this is your first Flutter project:
+void _sendServer(BuildContext context) async {
+...
+      // -------- connection is OK --------
+      final resultConnect = await client.connect();
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+      // -------- uploading problem --------
+      if (resultConnect.toString() == 'session_connected') {
+        print("Uploading..." + globals.picPath);
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+        final resultUpload = await client.sftpUpload(
+          path: globals.picPath,
+          toPath: "./photos",     // maybe wrong server path, some security problem or error in package:ssh/ssh.dart
+          callback: (progress) async {
+            print(progress);
+          },
+        );
+        print("Upload: " + resultUpload.toString());
+...
+
