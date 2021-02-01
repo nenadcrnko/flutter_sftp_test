@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "219394403686",
+    "project_id": "sftp-test-app",
+    "storage_bucket": "sftp-test-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219394403686:android:fddef930ba5fca49a5eca7",
+        "android_client_info": {
+          "package_name": "com.example.flutter_sftp_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219394403686-97jm7dtu1nmnlhptib09l59dvc9onla5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9hzoid0wEADq1gX_szRdu5v1x8Nuh2wM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219394403686-97jm7dtu1nmnlhptib09l59dvc9onla5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
