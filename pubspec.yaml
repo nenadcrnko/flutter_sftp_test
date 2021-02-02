@@ -33,7 +33,7 @@ dependencies:
   path_provider: ^1.4.2
   path: ^1.6.4
   ssh: ^0.0.7
-
+  cloud_firestore: ^0.13.0+1
 
 dev_dependencies:
   flutter_test:
